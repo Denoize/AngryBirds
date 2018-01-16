@@ -1,5 +1,5 @@
 package main.java.model.character;
 
-public interface Character {
+public abstract class Character {
 
 }

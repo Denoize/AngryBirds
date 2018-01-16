@@ -1,6 +1,6 @@
 package main.java.model.character;
 
-public class Bird {
+public class Bird extends Character{
 	
 
 }

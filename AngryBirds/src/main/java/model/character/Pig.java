@@ -1,5 +1,5 @@
 package main.java.model.character;
 
-public class Pig {
+public class Pig extends Character {
 
 }

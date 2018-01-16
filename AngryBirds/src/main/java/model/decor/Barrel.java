@@ -1,5 +1,5 @@
 package main.java.model.decor;
 
-public class Barrel {
+public class Barrel extends Decor {
 
 }

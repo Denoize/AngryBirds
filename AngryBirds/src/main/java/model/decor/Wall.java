@@ -1,5 +1,5 @@
 package main.java.model.decor;
 
-public class Wall {
+public class Wall extends Decor {
 
 }

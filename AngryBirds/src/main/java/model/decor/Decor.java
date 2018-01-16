@@ -1,5 +1,5 @@
 package main.java.model.decor;
 
-public interface Decor {
+public abstract class Decor {
 
 }
