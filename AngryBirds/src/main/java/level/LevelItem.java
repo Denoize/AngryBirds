@@ -26,11 +26,7 @@ public abstract class LevelItem extends Component{
 
     public LevelItem(Point position){
        this.position = position;
-       try {
-          img = ImageIO.read(new File(imagePath));
-       } catch (IOException e) {
-          e.printStackTrace();
-       }
+       
     }
 
     public Dimension getPreferredSize() {
@@ -55,5 +51,19 @@ public abstract class LevelItem extends Component{
 
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	/**
+	 * @return the img
+	 */
+	public BufferedImage getImg() {
+		return img;
+	}
+
+	/**
+	 * @param img the img to set
+	 */
+	public void setImg(BufferedImage img) {
+		this.img = img;
 	}
 }
