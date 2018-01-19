@@ -7,14 +7,14 @@ import main.java.model.decor.Decor;
 import main.java.model.decor.Wall;
 
 public class DecorFactory {
-	public Decor getDecor(String name, Point position){
+	public Decor getDecor(String name, double x, double y){
 			
 		if(name.equals("wall")){
-			return new Wall(position);
+			return new Wall(x, y);
 		}
 		
 		else if(name.equals("barrel")){
-			return new Barrel(position);
+			return new Barrel(x, y);
 		}
 		
 		return null ;

@@ -6,8 +6,8 @@ import main.java.level.LevelItem;
 
 public abstract class Decor extends LevelItem{
 
-	public Decor(Point position) {
-		super(position);
+	public Decor(double x, double y) {
+		super(x, y);
 		// TODO Auto-generated constructor stub
 	}
 

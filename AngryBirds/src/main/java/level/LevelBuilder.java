@@ -11,10 +11,10 @@ public class LevelBuilder {
 		Level level = new Level();
 		CharacterFactory cf = new CharacterFactory();
 		level.initLevel();
-		level.addLevelItem(cf.getCharacter("bird", new Point(50, 100)));
-		level.addLevelItem(cf.getCharacter("bird", new Point(100, 100)));
-		level.addLevelItem(cf.getCharacter("bird", new Point(150, 100)));
-		level.addLevelItem(cf.getCharacter("pig", new Point(500, 100)));
+		level.addLevelItem(cf.getCharacter("bird", 0, 650));
+		level.addLevelItem(cf.getCharacter("bird", 50, 650));
+		level.addLevelItem(cf.getCharacter("bird",100, 650));
+		level.addLevelItem(cf.getCharacter("pig",500, 650));
 		
 		return level;
 	}

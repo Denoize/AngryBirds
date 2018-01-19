@@ -28,7 +28,7 @@ public class App{
 
 	private void prepareGUI(){
 		mainFrame = new Frame("AngryBirds");
-		mainFrame.setSize(800,600);
+		mainFrame.setSize(1000, 800);
 		mainFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent){
 				System.exit(0);

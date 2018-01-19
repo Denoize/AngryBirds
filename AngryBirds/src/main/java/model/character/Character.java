@@ -6,8 +6,8 @@ import main.java.level.LevelItem;
 
 public abstract class Character extends LevelItem{
 
-	public Character(Point position) {
-		super(position);
+	public Character(double x, double y) {
+		super(x, y);
 		// TODO Auto-generated constructor stub
 	}
 

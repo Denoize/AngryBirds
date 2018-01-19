@@ -8,10 +8,10 @@ import javax.imageio.ImageIO;
 
 public class Bird extends Character{
 
-	public Bird(Point position){
-		super(position);
+	public Bird(double x, double y) {
+		super(x, y);
 		
-		setImagePath("main/resource/images/character/angrybirds.png");
+		setImagePath("src/main/resource/images/character/angrybirds.png");
 		try {
 	          setImg(ImageIO.read(new File(getImagePath())));
 	       } catch (IOException e) {

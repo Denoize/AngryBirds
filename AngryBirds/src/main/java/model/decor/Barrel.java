@@ -4,8 +4,8 @@ import java.awt.Point;
 
 public class Barrel extends Decor {
 	
-		public Barrel(Point position) {
-		super(position);
-		setImagePath("/AngryBirds/src/main/resource/images/decor/barrel.png");
+		public Barrel(double x, double y) {
+			super(x, y);
+		setImagePath("src/main/resource/images/character/barrel.png");
 	}
 }

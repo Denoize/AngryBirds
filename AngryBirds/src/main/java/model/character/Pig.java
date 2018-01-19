@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 
 public class Pig extends Character {
 	
-	public Pig(Point position) {
-		super(position);
-		setImagePath("./pig.png");
+	public Pig(double x, double y) {
+		super(x, y);
+		setImagePath("src/main/resource/images/character/pig.png");
 		getClass().getClassLoader().getResource(getImagePath());
 		try {
 	          setImg(ImageIO.read(new File(getImagePath())));
