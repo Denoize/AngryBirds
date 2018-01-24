@@ -51,7 +51,7 @@ public class Menu extends Panel implements  MouseListener, MouseMotionListener{
 	 */
 	public void newGame() {
 		System.out.println("Log : new game");
-		Game game = new Game();
+		Game game = new Game(1);
 		App.getInstance().setPanel(game);
 	}
 	

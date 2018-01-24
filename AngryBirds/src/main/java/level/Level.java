@@ -8,7 +8,9 @@ import java.util.List;
 
 public class Level extends Panel {
 	
+	private int number;
 	private List<LevelItem> items = new ArrayList<LevelItem>();
+	
 	
 	public void addLevelItem(LevelItem  item){
 		items.add(item);
@@ -33,5 +35,13 @@ public class Level extends Panel {
 	 */
 	public void setItems(List<LevelItem> items) {
 		this.items = items;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int numero) {
+		this.number = numero;
 	}
 }
