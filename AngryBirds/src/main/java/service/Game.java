@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
@@ -42,7 +43,7 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
     boolean selecting;                          // vrai lorsque le joueur sélectionne l'angle et la vitesse
     Image buffer;                               // image pour le rendu hors écran
     Stack<Bird> birds = new Stack<Bird>();
-    List<Pig> pigs = new ArrayList<Pig>();
+    List<Pig> pigs = Collections.synchronizedList(new ArrayList<Pig>());
     
     Level level;
     Player player;
@@ -113,8 +114,7 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
 				birds.push((Bird) item);	
 			}
         	else if(item instanceof Pig){
-        		pigs.add((Pig) item);	
-        		
+        		pigs.add((Pig) item);
         		item.setLocation(100, 400);
         	
         	}
@@ -159,9 +159,11 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
                 velocityY += gravity;
 
                 // conditions de victoire
-                for(Pig pig : pigs){
+                List<Pig> pigsCopy = new ArrayList<Pig>(pigs);
+            
+                for(Pig pig : pigsCopy){
                 	if(distance(currentBird.getPosX(), currentBird.getPosY(), pig.getPosX(), pig.getPosY()) < 35) {
-                		
+                
                 		pigs.remove(pig);
                         score++;
                         
@@ -170,10 +172,13 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
                         else{
                         	message = "Gagné : cliquez pour recommencer.";
                         	//nextLevel();
+                        	stop();
                         }
                         	
                     }
                 }
+             
+                
                 
                 if(currentBird.getPosX() < 0 || currentBird.getPosX() > frameWidth || currentBird.getPosY() < 0 || currentBird.getPosY() > ground) {
                     if(birds.isEmpty()){
@@ -183,11 +188,8 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
                     }
                     else{
                     	nextTry();
-                    }
-                
-                    
+                    }                 
                 }
-
                 // redessine
                 repaint();
             }
@@ -206,8 +208,6 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
        
         // fond
         g.drawImage(background, 0, 0, null);
- 
-        
 
         // décor
         g.setColor(Color.BLACK);
