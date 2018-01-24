@@ -10,10 +10,15 @@ import java.awt.Panel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+
+import javax.imageio.ImageIO;
 
 import main.java.level.Level;
 import main.java.level.LevelBuilder;
@@ -25,10 +30,10 @@ import main.java.model.character.Pig;
 public class Game extends Panel implements Runnable, MouseListener, MouseMotionListener {
 	//double birdX, birdY, velocityX, velocityY;  // informations relatives à l'oiseau
 	final int frameWidth = 1000, frameHeight = 800;
-	int ground = 700;
+	int ground = 650;
 	Bird currentBird;  // informations relatives à l'oiseau
 	double velocityX, velocityY;
-                         // informations relatives au cochon
+	private BufferedImage background;
     double gravity;                             // gravité
     int mouseX, mouseY;                         // position de la souris lors de la sélection
     String message;                             // message à afficher en haut de l'écran
@@ -84,6 +89,14 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
 
     // début de partie
     void init() {
+    	
+    	
+		try {
+	          background = ImageIO.read(new File("src/main/resource/images/decor/background.jpg"));
+	       } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+    	
         gameOver = false;
         selecting = true;
 
@@ -148,9 +161,17 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
                 // conditions de victoire
                 for(Pig pig : pigs){
                 	if(distance(currentBird.getPosX(), currentBird.getPosY(), pig.getPosX(), pig.getPosY()) < 35) {
-                		nextTry();
-                        message = "Gagné : cliquez pour recommencer.";
+                		
+                		pigs.remove(pig);
                         score++;
+                        
+                        if(!pigs.isEmpty())
+                        	nextTry();
+                        else{
+                        	message = "Gagné : cliquez pour recommencer.";
+                        	//nextLevel();
+                        }
+                        	
                     }
                 }
                 
@@ -182,18 +203,17 @@ public class Game extends Panel implements Runnable, MouseListener, MouseMotionL
     public void paint(Graphics g2) {
         if(buffer == null) buffer = createImage(frameWidth,frameHeight);
         Graphics2D g = (Graphics2D) buffer.getGraphics();
-
-        
        
         // fond
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.drawImage(background, 0, 0, null);
+ 
+        
 
         // décor
         g.setColor(Color.BLACK);
-        g.drawLine(0, 700, getWidth(), 700);
         g.drawLine(200, 700, 200, 600);
       
+        if(selecting) g.drawLine((int) currentBird.getPosX()+25, (int) currentBird.getPosY()+25, mouseX, mouseY); // montre l'angle et la vitesse
         
         // messages
         g.setColor(Color.BLACK);

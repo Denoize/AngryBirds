@@ -75,6 +75,7 @@ public abstract class LevelItem extends Component{
 
 	public void setPosX(double posX) {
 		this.posX = posX;
+	
 	}
 
 
