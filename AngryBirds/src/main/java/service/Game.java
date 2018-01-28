@@ -195,11 +195,14 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		currentLevel++;
 
 		init();
+		
+		// TODO Code a supprimer plus tard.
 		if(currentLevel==3)currentLevel=1;
 
 	}
 
 	// boucle qui calcule la position de l'oiseau en vol, effectue l'affichage et teste les conditions de victoire
+	@SuppressWarnings("static-access")
 	public void run() {
 		while(true) {
 			// un pas de simulation toutes les 10ms
@@ -254,20 +257,14 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 					}					 
 				}
 
-				if(collision()) {
-					//					if(birds.isEmpty()){
-					//						stop();
-					//						message = "Perdu : cliquez pour recommencer.";
-					//
-					//					}else{
-					//						newAttempt();
-					//					}
+				// detecte les collisions
+				collision();
 
-				}
+				
 
-				// redessine
-				//				repaint();
+				
 			}
+			// redessine
 			repaint();
 		}
 	}
@@ -297,7 +294,6 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 

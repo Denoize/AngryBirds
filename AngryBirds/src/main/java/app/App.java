@@ -40,11 +40,8 @@ public class App{
 		});    
 
 
-//		Menu menu = new Menu();
-//		pane = menu;
-//		
+	
 		Game game = new Game(1);
-//		pane = game;
 		mainFrame.add(game,BorderLayout.CENTER);
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.pack();
