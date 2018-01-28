@@ -16,28 +16,25 @@ public abstract class LevelItem extends Component{
 	 */
 	private static final long serialVersionUID = 1L;
 	private BufferedImage img;
-	private double posX;
-	private double posY;
 	private String imagePath;
 	
 
     public void paint(Graphics g) {
-//       g.drawImage(img, (int) posX, (int) posY, null);
     }
 
    
 
-    public LevelItem(double x, double y) {
+    public LevelItem(int x, int y) {
 		super();
-		this.posX = x;
-		this.posY = y;
+		setLocation(x, y);
+		
 	}
 
 
 
 	public Dimension getPreferredSize() {
        if (img == null) {
-          return new Dimension(100,100);
+          return new Dimension(0,0);
        } else {
           return new Dimension(img.getWidth(), img.getHeight());
        }
@@ -67,28 +64,22 @@ public abstract class LevelItem extends Component{
 
 
 
-	public double getPosX() {
-		return posX;
+	/**
+	 * @return the centerX
+	 */
+	public double getCenterX() {
+		return getX() - (getWidth()/2);
 	}
 
 
+	/**
+	 * @return the centerY
+	 */
+	public double getCenterY() {
+		return getY() - (getHeight()/2);
+	}
 
-	public void setPosX(double posX) {
-		this.posX = posX;
 	
-	}
-
-
-
-	public double getPosY() {
-		return posY;
-	}
-
-
-
-	public void setPosY(double posY) {
-		this.posY = posY;
-	}
-
+	
 	
 }

@@ -7,7 +7,7 @@ import main.java.model.character.Character;
 import main.java.model.character.Pig;
 
 public class CharacterFactory {
-	public Character getCharacter(String name, double x, double y){
+	public Character getCharacter(String name, int x, int y){
 		
 		if(name.equals("bird")){
 			return new Bird(x, y);

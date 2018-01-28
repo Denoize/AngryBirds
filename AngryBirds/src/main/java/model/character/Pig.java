@@ -8,16 +8,31 @@ import javax.imageio.ImageIO;
 
 public class Pig extends Character {
 	
-	public Pig(double x, double y) {
+	public Pig(int x, int y) {
 		super(x, y);
-		setImagePath("src/main/resource/images/character/pig.png");
+		
+	}
+
+	public void setNormal() {
+		setImagePath("src/main/resource/images/character/pig_normal.png");
+		getClass().getClassLoader().getResource(getImagePath());
+		try {
+			setImg(ImageIO.read(new File(getImagePath())));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		setSize(getImg().getWidth(), getImg().getHeight());
+	}
+	
+	public void setBlind() {
+		setImagePath("src/main/resource/images/character/pig_blind.png");
 		getClass().getClassLoader().getResource(getImagePath());
 		try {
 	          setImg(ImageIO.read(new File(getImagePath())));
 	       } catch (IOException e) {
 	          e.printStackTrace();
 	    }
+		setSize(getImg().getWidth(), getImg().getHeight());
 	}
-
 	
 }

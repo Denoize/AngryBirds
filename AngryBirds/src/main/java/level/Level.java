@@ -17,10 +17,7 @@ public class Level extends Panel {
 	}
 	
 	public void initLevel(){
-//		Graphics2D g = (Graphics2D) getGraphics();
-//		g.setColor(Color.BLACK);
-//        g.drawLine(0, 500, 800, 500);
-//        g.drawLine(100, 500, 100, 400);
+		
 	}
 
 	/**

@@ -6,9 +6,10 @@ import main.java.level.LevelItem;
 
 public abstract class Character extends LevelItem{
 
-	public Character(double x, double y) {
+
+	
+	public Character(int x, int y) {
 		super(x, y);
-		// TODO Auto-generated constructor stub
 	}
 
 
