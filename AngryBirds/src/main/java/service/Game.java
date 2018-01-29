@@ -59,7 +59,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 	Level level;
 	Player player;
 	private int currentLevel;
-	public List<LevelItem> items;
+	private List<LevelItem> items;
 	private boolean a;
 
 	// calcule la distance entre deux points
@@ -124,6 +124,12 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 		repaint();
 	}
+	
+	public void newGame(){
+		this.currentLevel = 1;
+		score = 0;
+		init();
+	}
 
 
 	// début de partie
@@ -173,11 +179,10 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 	}
 
 	// fin de partie
-	void stop() {
+	void retry() {
 		velocityX = 0;
 		velocityY = 0;
 		gameOver = true;
-
 	}
 
 	void newAttempt(){
@@ -195,7 +200,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		currentLevel++;
 
 		init();
-		
+
 		// TODO Code a supprimer plus tard.
 		if(currentLevel==3)currentLevel=1;
 
@@ -248,7 +253,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 				if(currentBird.getX() < -60 || currentBird.getX() > frameWidth+60 || currentBird.getY() < -60) {
 					currentBird.setCalm();
 					if(birds.isEmpty()){
-						stop();
+						retry();
 						message = "Perdu : cliquez pour recommencer.";
 
 					}else{
@@ -260,9 +265,9 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 				// detecte les collisions
 				collision();
 
-				
 
-				
+
+
 			}
 			// redessine
 			repaint();
@@ -299,7 +304,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 				items.remove(currentBird);
 				if(birds.isEmpty()){
-					stop();
+					retry();
 					message = "Perdu : cliquez pour recommencer.";
 
 				}else{
@@ -387,18 +392,18 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		g.drawString("score: " + score, 20, 20);
 
 
-		if(!items.isEmpty())
-			for(LevelItem item: items) {
-				if(item instanceof Bird) {
 
-					g.drawImage(item.getImg(), (int) item.getCenterX(), (int) item.getCenterY(), null);
+		for(LevelItem item: items) {
+			if(item instanceof Bird) {
 
-				}
-				else {
-					g.drawImage(item.getImg(), (int) item.getX(), (int) item.getY(), null);
+				g.drawImage(item.getImg(), (int) item.getCenterX(), (int) item.getCenterY(), null);
 
-				}
 			}
+			else {
+				g.drawImage(item.getImg(), (int) item.getX(), (int) item.getY(), null);
+
+			}
+		}
 
 
 		// affichage à l'écran sans scintillement

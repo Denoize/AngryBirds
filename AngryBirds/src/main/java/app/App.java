@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
 
 import main.java.level.LevelItem;
 import main.java.service.Game;
-import main.java.service.Menu;
+import main.java.service.MenuApp;
 
 public class App{
 
@@ -18,8 +18,16 @@ public class App{
 	
 	private Frame mainFrame;
 
+	/**
+	 * @return the mainFrame
+	 */
+	public Frame getMainFrame() {
+		return mainFrame;
+	}
+
 	public static Graphics graphic;
 	public static Panel pane;
+	private Game game;
 
 	public App(){
 		prepareGUI();
@@ -32,7 +40,6 @@ public class App{
 	private void prepareGUI(){
 		mainFrame = new Frame("AngryBirds");
 		mainFrame.setSize(1000, 800);
-		mainFrame.setLayout(new BorderLayout());
 		mainFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent){
 				System.exit(0);
@@ -41,8 +48,9 @@ public class App{
 
 
 	
-		Game game = new Game(1);
-		mainFrame.add(game,BorderLayout.CENTER);
+		game = new Game(1);
+		mainFrame.add(game);
+		mainFrame.setMenuBar(new MenuApp());
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.pack();
 		mainFrame.setVisible(true);
@@ -77,7 +85,14 @@ public class App{
 		return angryBirds;
 	}
 
-	
+	public Game getGame() {
+		return game;
+	}
+
+	public void quit() {
+		mainFrame.dispose();
+		
+	}
 
 
 }
