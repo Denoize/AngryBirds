@@ -37,8 +37,8 @@ public class Level extends Panel {
 		return gravity.getBlackHoles();
 	}
 	
-	public double getGravity(Character character) {
-		return gravity.getGravity(character);
+	public void getGravity(Character character) {
+		gravity.underGravity(character);
 	}
 
 	/**

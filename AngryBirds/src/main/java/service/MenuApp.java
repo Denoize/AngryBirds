@@ -1,37 +1,25 @@
 package main.java.service;
 
-import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.Dialog;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Label;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
-import java.awt.Panel;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BoxLayout;
-import javax.swing.SpringLayout;
-
 import main.java.app.App;
-import main.java.model.Player;
 
 public class MenuApp extends MenuBar{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	Menu gameMenu;
 	Menu retryMenu;
 	Menu helpMenu;
@@ -55,11 +43,14 @@ public class MenuApp extends MenuBar{
 		saveGameMenuItem.addActionListener(new SaveGameListener());
 		quitMenuItem.addActionListener(new QuitGameListener());
 		
+		loadGameMenuItem.disable();
+		saveGameMenuItem.disable();
+		
 		gameMenu.add(newGameMenuItem);
 		gameMenu.add(loadGameMenuItem);
 		gameMenu.add(saveGameMenuItem);
 		gameMenu.add(quitMenuItem);
-		
+			
 			
 		// A propos
 		MenuItem aboutMenuItem = new MenuItem("A propos...");
@@ -68,7 +59,6 @@ public class MenuApp extends MenuBar{
 		helpMenu.add(aboutMenuItem);
 		add(gameMenu);
 		add(helpMenu);
-		
 
 	}
 		

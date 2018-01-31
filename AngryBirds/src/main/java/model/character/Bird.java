@@ -63,6 +63,7 @@ public class Bird extends Character{
 		angry = false;
 	}
 	
+	@Override
 	public void setDead() {
 		setImagePath("src/main/resource/images/character/bird_dead.png");
 		try {
@@ -72,6 +73,7 @@ public class Bird extends Character{
 	    }
 		
 		setSize(getImg().getWidth(), getImg().getHeight());
+		setLive(0);
 		angry = false;
 	}
 

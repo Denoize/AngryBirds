@@ -9,9 +9,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.Point;
-import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -19,9 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
 
 import javax.imageio.ImageIO;
@@ -29,50 +25,49 @@ import javax.imageio.ImageIO;
 import main.java.level.Level;
 import main.java.level.LevelBuilder;
 import main.java.level.LevelItem;
-import main.java.model.Player;
 import main.java.model.character.Bird;
+import main.java.model.character.Character;
 import main.java.model.character.Pig;
 import main.java.model.decor.BlackHole;
 import main.java.model.decor.Decor;
-import main.java.model.decor.Wall;
+import main.java.tools.Constante;
 import main.java.tools.Tools;
 
 public class Game extends Canvas implements Runnable, MouseListener, MouseMotionListener {
-	
-	final int frameWidth = 1000, frameHeight = 800;
-	int ground = 675;
-	Bird currentBird;  // informations relatives à l'oiseau
-	double velocityX, velocityY;
+
+	private Bird currentBird;  // l'oiseau courant
+
+	// Les differentes images static du jeu.
 	private BufferedImage background;
 	private BufferedImage slingshot;
 	private BufferedImage retryNotFocusIcon;
 	private BufferedImage retryFocusIcon;
 	private BufferedImage retryIcon;
-	double gravity;                             // gravité
-	int mouseX, mouseY;                         // position de la souris lors de la sélection
-	String message;                             // message à afficher en haut de l'écran
-	boolean gameOver;                           // vrai lorsque le joueur a touché un bord ou le cochon
-	boolean selecting;                          // vrai lorsque le joueur sélectionne l'angle et la vitesse
-	Image buffer;                               // image pour le rendu hors écran
-	final Point slingshotCenter = new Point(230,550);
-	Stack<Bird> birds;
-	List<Pig> pigs;
-	int animation_birds;
-	int animation_pigs;
 
-	Level level;
-	Player player;
+	private int mouseX, mouseY;                         // position de la souris lors de la sélection
+	private String message;                             // message à afficher en haut de l'écran
+	private boolean gameOver;                           // vrai lorsque le joueur a touché un bord ou le cochon
+	private boolean selecting;                          // vrai lorsque le joueur sélectionne l'angle et la vitesse
+	private Image buffer;                               // image pour le rendu hors écran
+	private final Point slingshotCenter = new Point(230,550);
+	private Stack<Bird> birds;
+	private List<Pig> pigs;
+
+	private int animation_birds;
+	private int animation_pigs;
+
+	private Level level;
+
 	private int currentLevel;
 	private List<LevelItem> items;
-	private boolean a;
+	private boolean shake;
+	private boolean gameFinish;
 
-	
 
 	// constructeur
 	public Game(int currentLevel) {
 		setVisible(true);
 		this.currentLevel = currentLevel;
-		gravity = 2;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		try {
@@ -83,7 +78,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 			retryFocusIcon = ImageIO.read(new File("src/main/resource/images/retry_focus.png"));
 			retryIcon = retryFocusIcon;
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 		init();
@@ -102,8 +97,8 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		if(gameOver) {
 			init();
 		} else if(selecting) {
-//			velocityX = (slingshotCenter.getX() - mouseX ) / 20.0;
-//			velocityY = (slingshotCenter.getY()  - mouseY) / 20.0;
+			//			velocityX = (slingshotCenter.getX() - mouseX ) / 20.0;
+			//			velocityY = (slingshotCenter.getY()  - mouseY) / 20.0;
 			currentBird.getVelocity().setX((slingshotCenter.getX() - mouseX ) / 20.0);
 			currentBird.getVelocity().setY((slingshotCenter.getY()  - mouseY) / 20.0);
 			message = "L'oiseau prend sont envol";
@@ -117,13 +112,13 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 	public void mouseMoved(MouseEvent e) { 
 		mouseX = e.getX();
 		mouseY = e.getY();
-		
+
 		if((mouseX > 20 && mouseX < 95) && (mouseY > 20 && mouseY < 95)) {
 			retryIcon = retryFocusIcon;
 		}else {
 			retryIcon = retryNotFocusIcon;
 		}
-		
+
 		if(selecting) {
 			if(Tools.distance(mouseX, mouseY, slingshotCenter.getX(), slingshotCenter.getY()) < 100) {
 
@@ -142,7 +137,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 		repaint();
 	}
-	
+
 	public void newGame(){
 		this.currentLevel = 1;
 		init();
@@ -151,14 +146,10 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 	// début de partie
 	void init() {
-		
 
+		gameFinish = false;
 		gameOver = false;
 		selecting = true;
-
-
-		velocityX = 0;
-		velocityY = 0;
 
 		birds = new Stack<Bird>();
 		pigs = new ArrayList<Pig>();
@@ -168,35 +159,36 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		LevelBuilder bl = new LevelBuilder();
 
 		level = bl.createLevel(currentLevel);
-
-		for(Component item: level.getItems()) {
-
-			// creer les listes d'oiseaux et de cochons
-			if (item instanceof Bird) {
-				birds.push((Bird) item);	
-			}
-			else if(item instanceof Pig){
-				pigs.add((Pig) item);
-			}
+		if( level == null) {
+			gameFinish = true;
+			level = bl.createLevel(0);
 		}
+		else {
+			for(Component item: level.getItems()) {
 
-		currentBird = birds.pop();
-		currentBird.setLocation((int)slingshotCenter.getX(),(int) slingshotCenter.getY());
+				// creer les listes d'oiseaux et de cochons
+				if (item instanceof Bird) {
+					birds.push((Bird) item);	
+				}
+				else if(item instanceof Pig){
+					pigs.add((Pig) item);
+				}
+			}
 
-		items = level.getItems();
-
+			if(!birds.isEmpty()) {
+				currentBird = birds.pop();
+				currentBird.setLocation((int)slingshotCenter.getX(),(int) slingshotCenter.getY());
+			}
+			items = level.getItems();
+		}
 	}
 
 	// fin de partie
 	void retry() {
-		velocityX = 0;
-		velocityY = 0;
 		gameOver = true;
 	}
 
 	void newAttempt(){
-		velocityX = 0;
-		velocityY = 0;
 		gameOver = false;
 		selecting = true;
 		currentBird = birds.pop();
@@ -206,13 +198,12 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 	void nextLevel(){
 
-//		currentLevel++;
-		currentLevel= 4;
+		currentLevel++;
 
 		init();
 
 		// TODO Code a supprimer plus tard.
-//		if(currentLevel==4)currentLevel=1;
+		//		if(currentLevel==4)currentLevel=1;
 
 	}
 
@@ -227,29 +218,26 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 			if(animation_pigs>0)
 				animation_pigs--;
 			if(!gameOver && !selecting) {
+				if(!currentBird.isAlive()) {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					items.remove(currentBird);
+					if(birds.isEmpty()){
+						retry();
+						message = "Perdu : cliquez pour recommencer.";
 
+					}else{
+
+						newAttempt();
+					}
+				}
 				// moteur physique
-
-//				int x,y;
-//				x = (int)(currentBird.getX() + velocityX);
-//				if((int)(currentBird.getY() + velocityY)>ground)
-//					y = ground;
-//				else
-//					y = (int)(currentBird.getY() + velocityY);
-//				currentBird.setLocation(x,y);
-//				
-//				velocityY += level.getGravity(currentBird.getBounds());
-				int x,y;
-				x = (int)(currentBird.getX() + currentBird.getVelocity().getX());
-				if((int)(currentBird.getY() + currentBird.getVelocity().getY())>ground)
-					y = ground;
-				else
-					y = (int)(currentBird.getY() + currentBird.getVelocity().getY());
-				currentBird.setLocation(x,y);
-
-//				velocityY += level.getGravity(currentBird.getBounds());
-//				currentBird.getVelocity().setY(currentBird.getVelocity().getY() + level.getGravity(currentBird));
+				currentBird.updateLocation();
 				level.getGravity(currentBird);
+
 				// conditions de victoire
 				List<Pig> pigsCopy = new ArrayList<Pig>(pigs);
 
@@ -269,7 +257,8 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 					}
 				}
 
-				if(currentBird.getX() < -60 || currentBird.getX() > frameWidth+60 || currentBird.getY() < -60) {
+				// le bird sort de la fenetre de jeu
+				if(currentBird.getX() < -60 || currentBird.getX() > Constante.FRAME_WIDTH+60 || currentBird.getY() < -60) {
 					currentBird.setCalm();
 					if(birds.isEmpty()){
 						retry();
@@ -280,13 +269,8 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 						newAttempt();
 					}					 
 				}
-
-				// detecte les collisions
+				// detecte les collisions avec le decor
 				collision();
-
-
-
-
 			}
 			// redessine
 			repaint();
@@ -294,6 +278,10 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 	}
 
 
+	/**
+	 * Gestion de la collision entre le bird et les elements du decor
+	 * @return
+	 */
 	boolean collision() {
 		List<LevelItem> itemsCopy = new ArrayList<LevelItem>(items);
 
@@ -301,50 +289,33 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 			if(i instanceof Decor) {
 				Decor d = (Decor) i;
 
+				// collision entre les deux images
 				if(currentBird.getBounds().intersects(d.getBounds())) {
 					items.remove(d);
 
-					
+					// changer la trajectoire
 					double velocityX = -currentBird.getVelocity().getX()/20;
 					double velocityY = -currentBird.getVelocity().getY()/20;
 					currentBird.setVelocity(velocityX, velocityY);
-					
+
 					return true;
 				}
 			}
 		}
-		
-		
-		if(currentBird.getY() >= ground) {
+
+
+		if(currentBird.getY() >= Constante.GROUND) {
 			currentBird.setCalm();
-			if(Math.abs(currentBird.getVelocity().getX()) < 2) {
+			if(Math.abs(currentBird.getVelocity().getX()) < 2)
 				currentBird.setDead();
-//				repaint();
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				items.remove(currentBird);
-				if(birds.isEmpty()){
-					retry();
-					message = "Perdu : cliquez pour recommencer.";
-
-				}else{
-
-					newAttempt();
-				}
-			}else {
-//				velocityY = -velocityY/10;
+			else 
 				currentBird.getVelocity().setY(-currentBird.getVelocity().getY()/10);
-			}
-			if(velocityX >= 0)
+
+			if(currentBird.getVelocity().getX() >= 0)
 				currentBird.getVelocity().addX(-(currentBird.getVelocity().getX()/4));
-//				velocityX = velocityX - (velocityX/4);
-			else if(velocityX < 0)
+			else if(currentBird.getVelocity().getX() < 0)
 				currentBird.getVelocity().addX(currentBird.getVelocity().getX()/4);
-//				velocityX = velocityX + (velocityX/4);
+
 		}
 
 
@@ -360,81 +331,95 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 	// dessine le contenu de l'écran dans un buffer puis copie le buffer à l'écran
 	public void paint(Graphics g2) {
 
-		if(buffer == null) buffer = createImage(frameWidth,frameHeight);
+		if(buffer == null) buffer = createImage(Constante.FRAME_WIDTH,Constante.FRAME_HEIGHT);
 		Graphics2D g = (Graphics2D) buffer.getGraphics();
 
 
 		// fond
 		g.drawImage(background, 0, 0, null);
-		g.drawImage(slingshot, (int) 200, (int) 500, null);
-		g.drawImage(retryIcon, (int) 20, (int) 20,  null);
-		
-		// animation sur le lance pierre
-		if(currentBird.isAngry() && selecting) {
-			if(a)
-				currentBird.setLocation(currentBird.getX()+1, currentBird.getY()+1);
-			else
-				currentBird.setLocation(currentBird.getX()-1, currentBird.getY()-1);
-			a=!a;
-		}
-		
-		if(!birds.isEmpty()) {
-			if(Math.random() < 0.01 ) {
-				int choice  = (int)(( Math.random() * 10) % birds.size());
-				birds.get(choice).setBoring();
-				animation_birds = 30;
+
+		if(!gameFinish) {
+			g.drawImage(slingshot, (int) 200, (int) 500, null);
+			g.drawImage(retryIcon, (int) 20, (int) 20,  null);
+
+			// animation sur le lance pierre
+			if(currentBird.isAngry() && selecting) {
+				if(shake)
+					currentBird.setLocation(currentBird.getX()+1, currentBird.getY()+1);
+				else
+					currentBird.setLocation(currentBird.getX()-1, currentBird.getY()-1);
+				shake=!shake;
+			}
+
+			if(!birds.isEmpty()) {
+				if(Math.random() < 0.01 ) {
+					int choice  = (int)(( Math.random() * 10) % birds.size());
+					birds.get(choice).setBoring();
+					animation_birds = 30;
+				}
+				else {
+					if(animation_birds==0)
+						for(Bird bird : birds) bird.setCalm();
+				}
+			}
+			
+			if(!pigs.isEmpty()) {
+				if(Math.random() < 0.01) {
+					int choice  = (int) ((Math.random() * 10) % pigs.size());
+					pigs.get(choice).setBlind();
+					animation_pigs = 20;
+				}
+				else {
+					if(animation_pigs==0)
+						for(Pig pig : pigs) pig.setNormal();
+				}
+			}
+
+			// décor
+			g.setColor(Color.black);
+			g.setStroke(new BasicStroke(2));
+			if(Tools.distance(currentBird.getX(), currentBird.getY(), slingshotCenter.getX(), slingshotCenter.getY()) < 110) {
+
+				g.drawLine(250, 540, (int) currentBird.getX(), (int) currentBird.getY());
+				g.drawLine(210, 535, (int) currentBird.getX(), (int) currentBird.getY());
 			}
 			else {
-				if(animation_birds==0)
-					for(Bird bird : birds) bird.setCalm();
-			}
-		}
-		if(!pigs.isEmpty()) {
-			if(Math.random() < 0.01) {
-				int choice  = (int) ((Math.random() * 10) % pigs.size());
-				pigs.get(choice).setBlind();
-				animation_pigs = 20;
-			}
-			else {
-				if(animation_pigs==0)
-					for(Pig pig : pigs) pig.setNormal();
-			}
-		}
-
-		// décor
-		g.setColor(Color.black);
-		g.setStroke(new BasicStroke(2));
-		if(Tools.distance(currentBird.getX(), currentBird.getY(), slingshotCenter.getX(), slingshotCenter.getY()) < 110) {
-
-			g.drawLine(250, 540, (int) currentBird.getX(), (int) currentBird.getY());
-			g.drawLine(210, 535, (int) currentBird.getX(), (int) currentBird.getY());
-		}
-		else {
-			g.drawLine(250, 540, 210, 535);
-
-		}
-
-		g.setStroke(new BasicStroke(1));
-
-		// messages
-		g.setColor(Color.BLACK);
-		g.drawString(message, this.getWidth()/2 - message.length()*3, this.getHeight()/6);
-	
-
-		for(LevelItem item: items) {
-			if(item instanceof Bird) {
-
-				g.drawImage(item.getImg(), (int) item.getCenterX(), (int) item.getCenterY(), null);
+				g.drawLine(250, 540, 210, 535);
 
 			}
-			else {
-				g.drawImage(item.getImg(), (int) item.getX(), (int) item.getY(), null);
 
+			g.setStroke(new BasicStroke(1));
+
+			// messages
+			Font font = new Font("Verdana", Font.BOLD, 32);
+			g.setFont(font);
+			g.setColor(Color.WHITE);
+			g.drawString(message, this.getWidth()/4, this.getHeight()/6);
+			g.setColor(Color.BLACK);
+			g.drawString("lvl " + currentLevel, this.getWidth() - 100, 50);
+
+
+			for(BlackHole bh:level.getBlackHoles()) {
+				g.drawImage(bh.getImg(), (int) bh.getX(), (int) bh.getY(), null);
 			}
-		}
-		
-		for(BlackHole bh:level.getBlackHoles()) {
-			g.drawImage(bh.getImg(), (int) bh.getX(), (int) bh.getY(), null);
+
+			for(LevelItem item: items) {
+				if(item instanceof Character) {
+
+					g.drawImage(item.getImg(), (int) item.getCenterX(), (int) item.getCenterY(), null);
+
+				}
+				else {
+					g.drawImage(item.getImg(), (int) item.getX(), (int) item.getY(), null);
+
+				}
+			}
+
+		}else {
+			Font font = new Font("Verdana", Font.BOLD, 64);
+			g.setFont(font);
+			g.setColor(Color.WHITE);
+			g.drawString("Game finished !", this.getWidth()/4, this.getHeight()/6);
 		}
 
 
@@ -444,7 +429,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 	// taille de la fenêtre
 	public Dimension getPreferredSize() {
-		return new Dimension(frameWidth,frameHeight);
+		return new Dimension(Constante.FRAME_WIDTH,Constante.FRAME_HEIGHT);
 	}
 
 

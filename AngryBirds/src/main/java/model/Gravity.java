@@ -30,12 +30,11 @@ public class Gravity {
 
 	/**
 	 * Calcul la gravité selon la position du bird
-	 * si le bird est à coté d'un troui noir, la gravité est altéré.
+	 * si le bird est à coté d'un trou noir, la gravité est altéré.
 	 * 
 	 * @param birdPosition
-	 * @return
 	 */
-	public double getGravity(Character character) {
+	public void underGravity(Character character) {
 		Rectangle bounds = character.getBounds();
 		// Si le bird est à coté d'un trou noir
 		for(BlackHole bh:blackholes)
@@ -47,37 +46,33 @@ public class Gravity {
 				double bhcy = bh.getBounds().getCenterY();
 				double distance = Tools.distance(ccx, ccy, bhcx, bhcy);
 				bhFactor = distance/20;
-				// coin superieur gauche
-				if( ccx < bhcx &&
-					ccy < bhcy) {
+
+				// le personnage entre dans le trou noir et meurt.
+				if(Tools.distance(ccx, ccy, bhcx, bhcy)<15) {
+					character.setDead();
+					character.setLocation((int)bhcx,(int) bhcy);
+				}// coin superieur gauche
+				else if( ccx < bhcx && ccy < bhcy) {
 					character.getVelocity().addX(bhFactor);
 					character.getVelocity().addY(bhFactor);
-					return bhFactor;
-					
+		
 				}//coin superieur droit
-				else if(ccx > bhcx &&
-						ccy < bhcy) {
+				else if(ccx > bhcx && ccy < bhcy) {
 					character.getVelocity().addX(bhFactor*(-1));
 					character.getVelocity().addY(bhFactor);
-					
+
 				}//coin inferieur gauche
-				else if(ccx < bhcx &&
-						ccy > bhcy) {
+				else if(ccx < bhcx && ccy > bhcy) {
 					character.getVelocity().addX(bhFactor);
 					character.getVelocity().addY(bhFactor*(-1));
 				}//coin inferieur droit
-				else if(ccx > bhcx &&
-						ccy > bhcy) {
+				else if(ccx > bhcx && ccy > bhcy) {
 					character.getVelocity().addX(bhFactor*(-1));
 					character.getVelocity().addY(bhFactor*(-1));
-				}
-				else {
-					
 				}
 			}
 
 		character.getVelocity().addY(global);
-		return global;
 	}
 
 	public void setGravity(double value) {

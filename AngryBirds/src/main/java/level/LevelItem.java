@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.java.model.Velocity;
+import main.java.tools.Constante;
 
 public abstract class LevelItem extends Component{
 	
@@ -18,12 +19,7 @@ public abstract class LevelItem extends Component{
 	private BufferedImage img;
 	private String imagePath;
 	
-	private Velocity velocity;
-	
-    public void paint(Graphics g) {
-    }
-
-   
+	private Velocity velocity; 
 
     public LevelItem(int x, int y) {
 		super();
@@ -32,6 +28,18 @@ public abstract class LevelItem extends Component{
 		
 	}
 
+    public void updateLocation() {
+    	int x,y;
+		
+		x = (int)(getX() + getVelocity().getX());
+		
+		if((int)(getY() + getVelocity().getY())> Constante.GROUND)
+			y = Constante.GROUND;
+		else
+			y = (int)(getY() + getVelocity().getY());
+		
+		setLocation(x,y);
+    }
 
 
 	public Dimension getPreferredSize() {

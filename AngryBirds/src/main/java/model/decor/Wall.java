@@ -7,9 +7,11 @@ import javax.imageio.ImageIO;
 
 public class Wall extends Decor {
 
+	private static final long serialVersionUID = 1L;
+
 	public Wall(int x, int y) {
 		super(x, y);
-		setImagePath("src/main/resource/images/decor/mur_50x150.jpg");
+		setImagePath("src/main/resource/images/decor/wall.png");
 		try {
 	          setImg(ImageIO.read(new File(getImagePath())));
 	       } catch (IOException e) {

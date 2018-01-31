@@ -1,16 +1,14 @@
 package main.java.app;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import main.java.level.LevelItem;
 import main.java.service.Game;
 import main.java.service.MenuApp;
+import main.java.tools.Constante;
 
 public class App{
 
@@ -39,15 +37,13 @@ public class App{
 
 	private void prepareGUI(){
 		mainFrame = new Frame("AngryBirds");
-		mainFrame.setSize(1000, 800);
+		mainFrame.setSize(Constante.FRAME_WIDTH, Constante.FRAME_HEIGHT);
 		mainFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent){
 				System.exit(0);
 			}        
 		});    
 
-
-	
 		game = new Game(1);
 		mainFrame.add(game);
 		mainFrame.setMenuBar(new MenuApp());
@@ -64,19 +60,6 @@ public class App{
 	public static Panel getPanel() {
 		return pane;
 	}
-	
-//	public void setPanel(Panel panel) {
-//		
-//		mainFrame.remove(pane);
-//		pane = panel;
-//		
-//		for(LevelItem i : ((Game)panel).items)
-//			System.out.println(i.getBounds());
-//		mainFrame.add(pane);
-//		mainFrame.setVisible(true);
-//		for(LevelItem i : ((Game)panel).items)
-//			System.out.println(">> "+i.getBounds());
-//	}
 
 	/**
 	 * @return the angryBirds

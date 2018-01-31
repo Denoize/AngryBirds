@@ -27,4 +27,18 @@ public abstract class Character extends LevelItem{
 		
 		return true;
 	}
+	
+	/**
+	 * @return the live
+	 */
+	public int getLive() {
+		return live;
+	}
+
+	/**
+	 * @param live the live to set
+	 */
+	public void setLive(int live) {
+		this.live = live;
+	}
 }
