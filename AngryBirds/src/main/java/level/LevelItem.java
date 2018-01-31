@@ -10,15 +10,16 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import main.java.model.Velocity;
+
 public abstract class LevelItem extends Component{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private BufferedImage img;
 	private String imagePath;
 	
-
+	private Velocity velocity;
+	
     public void paint(Graphics g) {
     }
 
@@ -27,6 +28,7 @@ public abstract class LevelItem extends Component{
     public LevelItem(int x, int y) {
 		super();
 		setLocation(x, y);
+		velocity = new Velocity();
 		
 	}
 
@@ -79,7 +81,31 @@ public abstract class LevelItem extends Component{
 		return getY() - (getHeight()/2);
 	}
 
-	
+
+
+	/**
+	 * @return the velocity
+	 */
+	public Velocity getVelocity() {
+		return velocity;
+	}
+
+
+
+	/**
+	 * @param velocity the velocity to set
+	 */
+	public void setVelocity(Velocity velocity) {
+		this.velocity = velocity;
+	}
+
+	/**
+	 * @param velocity the velocity to set
+	 */
+	public void setVelocity(double x, double y) {
+		this.velocity.setX(x);
+		this.velocity.setY(y);
+	}
 	
 	
 }
