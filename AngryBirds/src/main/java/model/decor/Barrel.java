@@ -1,12 +1,13 @@
 package main.java.model.decor;
 
-import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 public class Barrel extends Decor {
+
+	private static final long serialVersionUID = 1L;
 
 	public Barrel(int x, int y) {
 		super(x, y);

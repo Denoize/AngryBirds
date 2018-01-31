@@ -13,6 +13,10 @@ public class Gravity {
 	private double global;
 	private List<BlackHole> blackholes;
 
+	/**
+	 * Constructeur de gravité avec affectation de l'attraction général
+	 * @param global
+	 */
 	public Gravity(double global) {
 		super();
 		this.global = global;
@@ -24,9 +28,7 @@ public class Gravity {
 		blackholes = new ArrayList<>();
 	}
 
-	public void addBlackHole(BlackHole blackHole) {
-		blackholes.add(blackHole);
-	}
+
 
 	/**
 	 * Calcul la gravité selon la position du bird
@@ -87,6 +89,9 @@ public class Gravity {
 		return blackholes;
 	}
 
+	public void addBlackHole(BlackHole blackHole) {
+		blackholes.add(blackHole);
+	}
 
 
 }

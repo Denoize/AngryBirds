@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 
 public class BlackHole extends Decor {
 
+	private static final long serialVersionUID = 1L;
 	private double attractionFactor;
 	
 	public BlackHole(int x, int y, double attraction) {

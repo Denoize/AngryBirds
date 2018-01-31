@@ -1,7 +1,5 @@
 package main.java.service.factory;
 
-import java.awt.Point;
-
 import main.java.model.character.Bird;
 import main.java.model.character.Character;
 import main.java.model.character.Pig;

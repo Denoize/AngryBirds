@@ -1,14 +1,12 @@
 package main.java.model.character;
 
-import java.awt.Point;
-
 import main.java.level.LevelItem;
-import main.java.model.Velocity;
 
 public abstract class Character extends LevelItem{
 
-
-	int live = 1;
+	private static final long serialVersionUID = 1L;
+	
+	int live = 1; // vie du personnage
 	
 	public Character(int x, int y) {
 		super(x, y);

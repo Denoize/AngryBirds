@@ -1,9 +1,5 @@
 package main.java.level;
 
-import java.awt.Point;
-
-import main.java.model.character.Bird;
-import main.java.model.character.Pig;
 import main.java.model.decor.BlackHole;
 import main.java.service.factory.CharacterFactory;
 import main.java.service.factory.DecorFactory;

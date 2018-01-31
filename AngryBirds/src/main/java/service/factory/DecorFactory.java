@@ -1,7 +1,5 @@
 package main.java.service.factory;
 
-import java.awt.Point;
-
 import main.java.model.decor.Barrel;
 import main.java.model.decor.Ceiling;
 import main.java.model.decor.Decor;

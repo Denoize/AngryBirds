@@ -6,12 +6,17 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Pig extends Character {
-	
+
+	private static final long serialVersionUID = 1L;
+
 	public Pig(int x, int y) {
 		super(x, y);
 		
 	}
 
+	/**
+	 * Apparence normal (yeux ouvert)
+	 */
 	public void setNormal() {
 		setImagePath("src/main/resource/images/character/pig_normal.png");
 		getClass().getClassLoader().getResource(getImagePath());
@@ -23,6 +28,9 @@ public class Pig extends Character {
 		setSize(getImg().getWidth(), getImg().getHeight());
 	}
 	
+	/**
+	 * Apparence normal (yeux fermer)
+	 */
 	public void setBlind() {
 		setImagePath("src/main/resource/images/character/pig_blind.png");
 		getClass().getClassLoader().getResource(getImagePath());

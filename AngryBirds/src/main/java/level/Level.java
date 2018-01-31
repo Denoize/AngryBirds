@@ -29,10 +29,19 @@ public class Level extends Panel {
 		items.add(item);
 	}
 	
+	/**
+	 * Ajouter un trou noir
+	 * @param blackHole
+	 */
 	public void addBlackHole(BlackHole blackHole) {
 		gravity.addBlackHole(blackHole);
 	}
 	
+	/**
+	 * Obtenir la liste des trous noir
+	 * 
+	 * @return
+	 */
 	public List<BlackHole> getBlackHoles() {
 		return gravity.getBlackHoles();
 	}
@@ -55,6 +64,10 @@ public class Level extends Panel {
 		this.items = items;
 	}
 
+	/**
+	 * le numero du niveau
+	 * @return
+	 */
 	public int getNumber() {
 		return number;
 	}

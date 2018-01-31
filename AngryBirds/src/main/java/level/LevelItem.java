@@ -2,13 +2,7 @@ package main.java.level;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import main.java.model.Velocity;
 import main.java.tools.Constante;
@@ -28,6 +22,9 @@ public abstract class LevelItem extends Component{
 		
 	}
 
+    /**
+     * Met a jour la position en fonction de la velocité
+     */
     public void updateLocation() {
     	int x,y;
 		
@@ -72,15 +69,12 @@ public abstract class LevelItem extends Component{
 		this.img = img;
 	}
 
-
-
 	/**
 	 * @return the centerX
 	 */
 	public double getCenterX() {
 		return getX() - (getWidth()/2);
 	}
-
 
 	/**
 	 * @return the centerY
@@ -89,16 +83,12 @@ public abstract class LevelItem extends Component{
 		return getY() - (getHeight()/2);
 	}
 
-
-
 	/**
 	 * @return the velocity
 	 */
 	public Velocity getVelocity() {
 		return velocity;
 	}
-
-
 
 	/**
 	 * @param velocity the velocity to set

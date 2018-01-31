@@ -28,6 +28,7 @@ public class MenuApp extends MenuBar{
 		buildMenu();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void buildMenu() {
 		gameMenu = new Menu("Jeu");
 		helpMenu = new Menu("Aide");
@@ -43,6 +44,8 @@ public class MenuApp extends MenuBar{
 		saveGameMenuItem.addActionListener(new SaveGameListener());
 		quitMenuItem.addActionListener(new QuitGameListener());
 		
+		
+		// en prévision 
 		loadGameMenuItem.disable();
 		saveGameMenuItem.disable();
 		
