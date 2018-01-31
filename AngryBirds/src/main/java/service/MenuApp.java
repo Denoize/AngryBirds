@@ -115,7 +115,7 @@ public class MenuApp extends MenuBar{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 						
-			Dialog d = new Dialog(App.getInstance().getMainFrame(), "A propos", false);
+			final Dialog d = new Dialog(App.getInstance().getMainFrame(), "A propos", false);
 			d.setSize(400, 200);
 			
 			d.setLayout(new GridLayout(4, 1));
