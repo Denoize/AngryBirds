@@ -42,4 +42,19 @@ public class Pig extends Character {
 		setSize(getImg().getWidth(), getImg().getHeight());
 	}
 	
+	/**
+	 * Apparence lors de la mort
+	 */
+	@Override
+	public void setDead() {
+		setImagePath("src/main/resource/images/character/pig_dead.png");
+		try {
+	          setImg(ImageIO.read(new File(getImagePath())));
+	       } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+		
+		setSize(getImg().getWidth(), getImg().getHeight());
+		setLive(0);
+	}
 }

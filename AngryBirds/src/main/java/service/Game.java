@@ -50,7 +50,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 	private boolean gameOver;                           // vrai lorsque le joueur a touché un bord ou le cochon
 	private boolean selecting;                          // vrai lorsque le joueur sélectionne l'angle et la vitesse
 	private Image buffer;                               // image pour le rendu hors écran
-	
+
 	private Stack<Bird> birds;
 	private List<Pig> pigs;
 
@@ -122,11 +122,13 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		}
 
 		if(selecting) {
+			// Si la force exercé sur le lance pierre est faible
 			if(Tools.distance(mouseX, mouseY, Constante.SLINGSHOT.getX(), Constante.SLINGSHOT.getY()) < 100) {
 
 				currentBird.setLocation(mouseX, mouseY);
 				currentBird.setCalm();
 			}else {
+				// limiter le birds à un cercle autour du lance pierre (SLINGSHOT)
 				double factor = 100 / Tools.distance(mouseX, mouseY, Constante.SLINGSHOT.getX(), Constante.SLINGSHOT.getY());
 				double x = ((mouseX - Constante.SLINGSHOT.getX()) * factor) + Constante.SLINGSHOT.getX();
 				double y = ((mouseY - Constante.SLINGSHOT.getY()) * factor) + Constante.SLINGSHOT.getY();
@@ -146,7 +148,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 	}
 
 
-	// début de partie
+	// configurer un début de partie
 	void init() {
 
 		gameFinish = false;
@@ -161,6 +163,8 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		LevelBuilder bl = new LevelBuilder();
 
 		level = bl.createLevel(currentLevel);
+
+		// plus de niveau suivant = jeu terminé
 		if( level == null) {
 			gameFinish = true;
 			level = bl.createLevel(0);
@@ -177,6 +181,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 				}
 			}
 
+			// mettre un bird sur le lance pierre
 			if(!birds.isEmpty()) {
 				currentBird = birds.pop();
 				currentBird.setLocation((int)Constante.SLINGSHOT.getX(),(int) Constante.SLINGSHOT.getY());
@@ -205,17 +210,23 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 	}
 
-	// boucle qui calcule la position de l'oiseau en vol, effectue l'affichage et teste les conditions de victoire
+	// boucle qui calcule la position de l'oiseau en vol et test les conditions de victoire
 	@SuppressWarnings("static-access")
 	public void run() {
 		while(true) {
 			// un pas de simulation toutes les 10ms
 			try { Thread.currentThread().sleep(10); } catch(InterruptedException e) { }
+
+			// animations
 			if(animation_birds>0)
 				animation_birds--;
 			if(animation_pigs>0)
 				animation_pigs--;
+
+			// le bird est en plein vol
 			if(!gameOver && !selecting) {
+
+				// si le bird est mort 
 				if(!currentBird.isAlive()) {
 					try {
 						Thread.sleep(100);
@@ -232,6 +243,8 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 						newAttempt();
 					}
 				}
+				
+				
 				// moteur physique
 				currentBird.updateLocation();
 				level.getGravity(currentBird);
@@ -246,6 +259,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 						pigs.remove(pig);
 						items.remove(pig);
 						// Si il reste des birds et des pigs
+						pig.setDead();
 
 						if (pigs.isEmpty()){
 							message = "Gagné : cliquez pour recommencer.";
@@ -278,9 +292,8 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 
 	/**
 	 * Gestion de la collision entre le bird et les elements du decor
-	 * @return
 	 */
-	boolean collision() {
+	void collision() {
 		List<LevelItem> itemsCopy = new ArrayList<LevelItem>(items);
 
 		for(LevelItem i : itemsCopy ) {
@@ -296,38 +309,35 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 					double velocityY = -currentBird.getVelocity().getY()/20;
 					currentBird.setVelocity(velocityX, velocityY);
 
-					return true;
+				
 				}
 			}
 		}
 
 
+		// le bird percute le sol
 		if(currentBird.getY() >= Constante.GROUND) {
+
 			currentBird.setCalm();
+
+			// le bird arrete sa course
 			if(Math.abs(currentBird.getVelocity().getX()) < 2)
 				currentBird.setDead();
 			else 
 				currentBird.getVelocity().setY(-currentBird.getVelocity().getY()/10);
 
-			if(currentBird.getVelocity().getX() >= 0)
-				currentBird.getVelocity().addX(-(currentBird.getVelocity().getX()/4));
-			else if(currentBird.getVelocity().getX() < 0)
-				currentBird.getVelocity().addX(currentBird.getVelocity().getX()/4);
-
+			// ralatir la course du bird
+			currentBird.getVelocity().addX(-(currentBird.getVelocity().getX()/4));
 		}
-
-
-		return false;
 	}
 
 	// évite les scintillements
 	public void update(Graphics g) {
-
 		paint(g);
 	}
 
 	// dessine le contenu de l'écran dans un buffer puis copie le buffer à l'écran
-	public void paint(Graphics g2) {
+	public synchronized void paint(Graphics g2) {
 
 		if(buffer == null) buffer = createImage(Constante.FRAME_WIDTH,Constante.FRAME_HEIGHT);
 		Graphics2D g = (Graphics2D) buffer.getGraphics();
@@ -337,8 +347,16 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 		g.drawImage(background, 0, 0, null);
 
 		if(!gameFinish) {
+			// decor fixe
 			g.drawImage(slingshot, (int) 200, (int) 500, null);
 			g.drawImage(retryIcon, (int) 20, (int) 20,  null);
+			// messages
+			Font font = new Font("Verdana", Font.BOLD, 32);
+			g.setFont(font);
+			g.setColor(Color.WHITE);
+			g.drawString(message, this.getWidth()/4, this.getHeight()/6);
+			g.setColor(Color.BLACK);
+			g.drawString("lvl " + currentLevel, this.getWidth() - 100, 50);
 
 			// animation sur le lance pierre
 			if(currentBird.isAngry() && selecting) {
@@ -349,6 +367,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 				shake=!shake;
 			}
 
+			// animation des birds en attente de lancement
 			if(!birds.isEmpty()) {
 				if(Math.random() < 0.01 ) {
 					int choice  = (int)(( Math.random() * 10) % birds.size());
@@ -361,6 +380,7 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 				}
 			}
 
+			// animation des pigs
 			if(!pigs.isEmpty()) {
 				if(Math.random() < 0.01) {
 					int choice  = (int) ((Math.random() * 10) % pigs.size());
@@ -376,7 +396,8 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 			// décor
 			g.setColor(Color.black);
 			g.setStroke(new BasicStroke(2));
-			// corde
+
+			// corde du lance pierre
 			if(Tools.distance(currentBird.getX(), currentBird.getY(), Constante.SLINGSHOT.getX(), Constante.SLINGSHOT.getY()) < 110) {
 
 				g.drawLine(250, 540, (int) currentBird.getX(), (int) currentBird.getY());
@@ -386,16 +407,6 @@ public class Game extends Canvas implements Runnable, MouseListener, MouseMotion
 				g.drawLine(250, 540, 210, 535);
 
 			}
-
-			g.setStroke(new BasicStroke(1));
-
-			// messages
-			Font font = new Font("Verdana", Font.BOLD, 32);
-			g.setFont(font);
-			g.setColor(Color.WHITE);
-			g.drawString(message, this.getWidth()/4, this.getHeight()/6);
-			g.setColor(Color.BLACK);
-			g.drawString("lvl " + currentLevel, this.getWidth() - 100, 50);
 
 
 			// affichage des trous noirs
