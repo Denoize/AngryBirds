@@ -20,7 +20,7 @@ public class LevelBuilder {
 
 		switch(number){
 		case 0 : return gameFinish();
-		case 1 : return createLevel6();
+		case 1 : return createLevel1();
 		case 2 : return createLevel2();
 		case 3 : return createLevel3();
 		case 4 : return createLevel4();
@@ -136,7 +136,7 @@ public class LevelBuilder {
 		
 		level.addLevelItem(df.getDecor("barrel", 675, 630));
 		level.addLevelItem(df.getDecor("barrel", 775, 630));
-		level.addLevelItem(df.getDecor("barrel", 775, 530));
+		level.addLevelItem(df.getDecor("barrel", 775, 570));
 		
 		level.addBlackHole(new BlackHole(500, 300, 1));
 		
