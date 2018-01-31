@@ -3,6 +3,16 @@ Projet MD
 31/01/18
 
 # Installation
+Télécharger le projet.
+Le décompresser.
+Ouvrir un terminal (Linux ou Windows) dans le dossier AngryBrids.
+Executer la commande:
+$ java -jar AngryBirds.jar
+
+Pour compiler soit même le projet: 
+Ouvrir un terminal (Linux ou Windows) dans le dossier AngryBrids.
+lancer la commande:
+$ javac @Makefile
 
 
 # Conception (UML)
