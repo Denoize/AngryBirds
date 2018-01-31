@@ -1,9 +1,6 @@
 package main.java.level;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Panel;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +10,7 @@ import main.java.model.decor.BlackHole;
 
 public class Level extends Panel {
 	
+	private static final long serialVersionUID = 1L;
 	private int number;
 	private List<LevelItem> items = new ArrayList<LevelItem>();
 	private Gravity gravity;
